@@ -1,72 +1,59 @@
-# Google Forms Vote Bot
-## Description
-This bot is used to automate voting on google forms.
+# Google Forms Vote Bot (Belgium Edition)
+
+This project is a fork of [google-docs-vote-bot](https://github.com/korti11/google-docs-vote-bot), heavily customized for Belgian voting contexts.
+
+It uses **Puppeteer** to automate filling out Google Forms with authentic-looking Flemish/Belgian data.
+
+## Features specific to this fork
+
+*   **Belgian Identity Generation**: Generates realistic Flemish names (e.g., "Peeters Jan", "Maes Julie") and addresses.
+*   **Flemish locations**: Location data is specifically tailored to real Flemish cities and villages.
+*   **Smart Phone Formatting**: Generates Belgian mobile numbers (04xx...) with realistic formatting variations (with or without spaces).
+*   **Smart Email Generation**: Prioritizes `gmail.com` (70%) while mixing in popular Belgian providers (`telenet.be`, `proximus.be`).
+
 
 ## Usage
+
+### Prerequisites
+*   Node.js installed on your machine.
+
+### Installation
+
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/ItsNyoty/google-docs-vote-bot.git
+    cd google-docs-vote-bot
+    ```
+
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+
+3.  Configure the bot:
+    *   Rename `.env.example` to `.env`.
+    *   Edit `.env` and add your target Google Form URL:
+        ```env
+        FORM_URL=https://docs.google.com/forms/d/e/YOUR_FORM_ID/viewform
+        ```
+
+### Running
+
+To start the bot:
+
 ```bash
-docker run -d --name=google-forms-vote-bot -e FORM_URL="https://docs.google.com/forms/..." -e ENTRY="Test" --init --cap_add=SYS_ADMIN docker.pkg.github.com/korti11/google-docs-vote-bot/google-forms-vote-bot:latest
+npm start
 ```
-The parameter --init and --cap_add=SYS_ADMIN are needed for Puppeteer to work within the docker container.
 
-### Environment variables
-#### FORM_URL
-`required: true`
+The bot will launch a browser instance (visible by default) and start filling out forms.
 
-This option holds the URL of the google form where to connect to.
+## Configuration
 
-#### ENTRY_MODE
-`required: true`
+You can adjust wait times in the `.env` file:
 
-`default: single`
+*   `MIN_WAIT_TIME`: Minimum seconds to wait between votes.
+*   `MAX_WAIT_TIME`: Maximum seconds to wait between votes.
 
-This option tells the bot if how to select the vote options.
+## Disclaimer
 
-**Modes**
-- single
-    - Only select one specific entry given by ENTRY.
-- multiple
-    - Select all specific entries given by ENTRIES.
-- random
-    - Select one random entry of the specific entries given by ENTRIES.
-
-#### ENTRY
-`required: if ENTRY_MODE is single`
-
-This option tells which entry of the vote should be selected.
-
-#### ENTRIES
-`required: if ENTRY_MODE is multiple or random`
-
-This option tells which entries of the vote should be selected.
-
-#### MIN_WAIT_TIME
-`required: true`
-
-`default: 1`
-
-This option is given in seconds and tell the bot what the min time is to wait between each vote.
-
-#### MAX_WAIT_TIME
-`required: true`
-
-`default: 2`
-
-This option is given in seconds and tell the bot what the max time is to wait between each vote.
-
-### Wait time
-The wait time is selected randomly between the MIN_WAIT_TIME and the MAX_WAIT_TIME. Per default each vote already has a min runtime of one second.
-
-### Docker Compose
-```YAML
-version: '3.8'
-services:
-    google-forms-vote-bot:
-        container_name: 'google-forms-vote-bot'
-        image: docker.pkg.github.com/korti11/google-docs-vote-bot/google-forms-vote-bot:latest
-        init: true
-        cap_add:
-            - SYS_ADMIN
-        environment:
-            FORM_URL: "https://docs.google.com/forms/..."
-            ENTRY: True
-```
+This tool is for educational and testing purposes only. Automated voting may violate the terms of service of Google Forms or the specific competition rules. Use responsibly.
